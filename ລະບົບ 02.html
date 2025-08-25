@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ລະບົບຈັດການເອກະສານ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Noto Sans Lao', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            transform: translateX(400px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+        
+        .status-badge {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .status-badge:hover::before {
+            left: 100%;
+        }
+        
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .department-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .department-card.admin {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .department-card.finance {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .department-card.hr {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .department-card.it {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        
+        .department-card.legal {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+        
+        .department-card.planning {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .document-preview {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .search-highlight {
+            background-color: #fef08a;
+            padding: 1px 2px;
+            border-radius: 2px;
+        }
+        
+        .priority-urgent {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .priority-very-urgent {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: pulse 1s infinite;
+        }
+        
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 gradient-bg flex items-center justify-center z-50">
+        <div class="text-center text-white">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <h2 class="text-2xl font-bold mb-2">ກຳລັງໂຫຼດລະບົບ...</h2>
+            <p class="text-white text-opacity-80">ລະບົບຈັດການເອກະສານ WordPress</p>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="fixed inset-0 gradient-bg flex items-center justify-center z-40 hidden">
+        <div class="glass-effect rounded-3xl p-8 max-w-lg w-full mx-4 slide-in-left">
+            <!-- Login Form -->
+            <div id="login-form" class="text-white">
+                <div class="text-center mb-8">
+                    <div class="bg-white bg-opacity-20 p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center pulse-animation">
+                        <i class="fas fa-file-alt text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2">ເຂົ້າສູ່ລະບົບ</h2>
+                    <p class="text-white text-opacity-80">ລະບົບຈັດການເອກະສານ WordPress</p>
+                </div>
+                
+                <form id="login-form-element" class="space-y-6">
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-4 text-white text-opacity-70"></i>
+                        <input type="text" id="login-username" class="w-full pl-12 pr-4 py-4 rounded-xl bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 focus:bg-opacity-30 transition-all" placeholder="ຊື່ຜູ້ໃຊ້ ຫຼື ອີເມວ" required>
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-4 text-white text-opacity-70"></i>
+                        <input type="password" id="login-password" class="w-full pl-12 pr-4 py-4 rounded-xl bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 focus:bg-opacity-30 transition-all" placeholder="ລະຫັດຜ່ານ" required>
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fas fa-building absolute left-4 top-4 text-white text-opacity-70"></i>
+                        <select id="login-department" class="w-full pl-12 pr-4 py-4 rounded-xl bg-white bg-opacity-20 border border-white border-opacity-30 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 focus:bg-opacity-30 transition-all" required>
+                            <option value="" class="text-gray-800">ເລືອກພະແນກ/ຫ້ອງການ</option>
+                            <option value="admin" class="text-gray-800">admin</option>
+                            <option value="" class="text-gray-800">ຂະແໜງບໍລິຫານ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງອົບຮົມ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງໂຄສະນາ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງສັງລວມ ແລະ ຂໍ້ມູນຂ່າວສານ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງສື່ມວນຊົນ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງສີສັດຕະນາກ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງຈັນທະບູລີ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງໄຊເສດຖາ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງສີໂຄດຕະບອງ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງໄຊທານີ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງນາຊາຍທອງ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງຫາດຊາຍຟອງ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງປາກງື່ມ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງສັງທອງ</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="remember-me" class="rounded border-white border-opacity-30 bg-white bg-opacity-20 text-white focus:ring-white focus:ring-opacity-50">
+                            <span class="ml-2 text-sm text-white text-opacity-80">ຈື່ຂ້ອຍໄວ້</span>
+                        </label>
+                        <button type="button" class="text-sm text-white text-opacity-80 hover:text-opacity-100 underline">
+                            ລືມລະຫັດຜ່ານ?
+                        </button>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-white text-purple-600 py-4 rounded-xl font-bold text-lg hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        ເຂົ້າສູ່ລະບົບ
+                    </button>
+                </form>
+                
+                <div class="text-center mt-8">
+                    <button onclick="showRegisterForm()" class="text-white text-opacity-80 hover:text-opacity-100 underline text-lg">
+                        ຍັງບໍ່ມີບັນຊີ? <span class="font-semibold">ລົງທະບຽນທີ່ນີ້</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="register-form" class="text-white hidden">
+                <div class="text-center mb-8">
+                    <div class="bg-white bg-opacity-20 p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center pulse-animation">
+                        <i class="fas fa-user-plus text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2">ລົງທະບຽນ</h2>
+                    <p class="text-white text-opacity-80">ສ້າງບັນຊີໃໝ່ສຳລັບລະບົບ</p>
+                </div>
+                
+                <form id="register-form-element" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                            <input type="text" id="register-firstname" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ຊື່" required>
+                        </div>
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                            <input type="text" id="register-lastname" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ນາມສະກຸນ" required>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                        <input type="email" id="register-email" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ອີເມວ" required>
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fas fa-user-circle absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                        <input type="text" id="register-username" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ຊື່ຜູ້ໃຊ້" required>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                            <input type="password" id="register-password" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ລະຫັດຜ່ານ" required>
+                        </div>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                            <input type="password" id="register-confirm-password" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ຢືນຢັນລະຫັດ" required>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fas fa-building absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                        <select id="register-department" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" required>
+                           <option value="" class="text-gray-800">ເລືອກພະແນກ/ຫ້ອງການ</option>
+                            <option value="admin" class="text-gray-800">admin</option>
+                            <option value="" class="text-gray-800">ຂະແໜງບໍລິຫານ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງອົບຮົມ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງໂຄສະນາ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງສັງລວມ ແລະ ຂໍ້ມູນຂ່າວສານ</option>
+                            <option value="" class="text-gray-800">ຂະແໜງສື່ມວນຊົນ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງສີສັດຕະນາກ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງຈັນທະບູລີ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງໄຊເສດຖາ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງສີໂຄດຕະບອງ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງໄຊທານີ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງນາຊາຍທອງ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງຫາດຊາຍຟອງ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງປາກງື່ມ</option>
+                            <option value="" class="text-gray-800">ຄະນະໂສະນາອົບຮົມເມືອງສັງທອງ</option>
+                        </select>
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fas fa-briefcase absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                        <input type="text" id="register-position" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ຕຳແໜ່ງງານ" required>
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fas fa-phone absolute left-3 top-3 text-white text-opacity-70 text-sm"></i>
+                        <input type="tel" id="register-phone" class="w-full pl-10 pr-3 py-3 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-sm" placeholder="ເບີໂທລະສັບ">
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="agree-terms" class="rounded border-white border-opacity-30 bg-white bg-opacity-20 text-white focus:ring-white focus:ring-opacity-50" required>
+                        <label for="agree-terms" class="ml-2 text-sm text-white text-opacity-80">
+                            ຂ້ອຍຍອມຮັບ <button type="button" class="underline hover:text-opacity-100">ເງື່ອນໄຂການໃຊ້ງານ</button>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-white text-purple-600 py-3 rounded-lg font-bold hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        ລົງທະບຽນ
+                    </button>
+                </form>
+                
+                <div class="text-center mt-6">
+                    <button onclick="showLoginForm()" class="text-white text-opacity-80 hover:text-opacity-100 underline">
+                        ມີບັນຊີແລ້ວ? <span class="font-semibold">ເຂົ້າສູ່ລະບົບ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-xl border-b-4 border-gradient-to-r from-blue-500 to-purple-600 sticky top-0 z-30">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-bars text-xl text-gray-600"></i>
+                        </button>
+                        <div class="flex items-center space-x-4">
+                            <div class="gradient-bg p-4 rounded-xl">
+                                <i class="fas fa-file-alt text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-800">ລະບົບຈັດການເອກະສານ</h1>
+                                <p class="text-gray-600">WordPress Document Management System</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                        <!-- Notifications -->
+                        <div class="relative">
+                            <button id="notifications-btn" class="p-3 rounded-full hover:bg-gray-100 transition-colors relative">
+                                <i class="fas fa-bell text-xl text-gray-600"></i>
+                                <span id="notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                            </button>
+                        </div>
+                        
+                        <!-- User Profile -->
+                        <div class="flex items-center space-x-4">
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600">ຜູ້ໃຊ້ງານ: <span id="current-user" class="font-semibold text-gray-800"></span></p>
+                                <p class="text-xs">
+                                    <span id="current-department" class="px-3 py-1 rounded-full text-white text-xs font-medium"></span>
+                                    <span id="current-position" class="text-gray-500 ml-2"></span>
+                                </p>
+                            </div>
+                            <div class="relative">
+                                <button id="profile-menu-btn" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <div class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                    <i class="fas fa-chevron-down text-gray-400"></i>
+                                </button>
+                                
+                                <!-- Profile Dropdown -->
+                                <div id="profile-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden">
+                                    <div class="py-2">
+                                        <button onclick="showProfile()" class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">
+                                            <i class="fas fa-user-circle mr-2"></i>ໂປຣໄຟລ໌
+                                        </button>
+                                        <button onclick="showSettings()" class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">
+                                            <i class="fas fa-cog mr-2"></i>ການຕັ້ງຄ່າ
+                                        </button>
+                                        <hr class="my-2">
+                                        <button onclick="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors text-red-600">
+                                            <i class="fas fa-sign-out-alt mr-2"></i>ອອກຈາກລະບົບ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="sidebar bg-white shadow-xl w-64 min-h-screen lg:relative fixed left-0 top-0 z-20 lg:translate-x-0">
+                <div class="p-6">
+                    <nav class="space-y-2">
+                        <button onclick="showTab('dashboard')" id="tab-dashboard" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                            <i class="fas fa-tachometer-alt text-lg"></i>
+                            <span class="font-medium">ໜ້າຫຼັກ</span>
+                        </button>
+                        <button onclick="showTab('incoming')" id="tab-incoming" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-inbox text-lg"></i>
+                            <span class="font-medium">ເອກະສານຂາເຂົ້າ</span>
+                            <span id="incoming-badge" class="ml-auto bg-green-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
+                        </button>
+                        <button onclick="showTab('outgoing')" id="tab-outgoing" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-paper-plane text-lg"></i>
+                            <span class="font-medium">ເອກະສານຂາອອກ</span>
+                            <span id="outgoing-badge" class="ml-auto bg-blue-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
+                        </button>
+                        <button onclick="showTab('send')" id="tab-send" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-share text-lg"></i>
+                            <span class="font-medium">ສົ່ງເອກະສານ</span>
+                        </button>
+                        <button onclick="showTab('add')" id="tab-add" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-plus-circle text-lg"></i>
+                            <span class="font-medium">ເພີ່ມເອກະສານ</span>
+                        </button>
+                        <button onclick="showTab('archive')" id="tab-archive" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-archive text-lg"></i>
+                            <span class="font-medium">ຄັງເອກະສານ</span>
+                        </button>
+                        <button onclick="showTab('reports')" id="tab-reports" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-chart-bar text-lg"></i>
+                            <span class="font-medium">ລາຍງານ</span>
+                        </button>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-6 lg:ml-0 ml-0">
+                <!-- Dashboard Tab -->
+                <div id="dashboard-content" class="tab-content fade-in">
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm font-medium">ເອກະສານທັງໝົດ</p>
+                                    <p class="text-3xl font-bold text-gray-800" id="total-docs">0</p>
+                                    <p class="text-xs text-green-600 mt-1">
+                                        <i class="fas fa-arrow-up mr-1"></i>+12% ຈາກເດືອນແລ້ວ
+                                    </p>
+                                </div>
+                                <div class="bg-blue-100 p-4 rounded-2xl">
+                                    <i class="fas fa-file-alt text-2xl text-blue-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm font-medium">ຂາເຂົ້າ</p>
+                                    <p class="text-3xl font-bold text-green-600" id="incoming-count">0</p>
+                                    <p class="text-xs text-green-600 mt-1">
+                                        <i class="fas fa-arrow-up mr-1"></i>+8% ຈາກເດືອນແລ້ວ
+                                    </p>
+                                </div>
+                                <div class="bg-green-100 p-4 rounded-2xl">
+                                    <i class="fas fa-inbox text-2xl text-green-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm font-medium">ຂາອອກ</p>
+                                    <p class="text-3xl font-bold text-blue-600" id="outgoing-count">0</p>
+                                    <p class="text-xs text-blue-600 mt-1">
+                                        <i class="fas fa-arrow-up mr-1"></i>+15% ຈາກເດືອນແລ້ວ
+                                    </p>
+                                </div>
+                                <div class="bg-blue-100 p-4 rounded-2xl">
+                                    <i class="fas fa-paper-plane text-2xl text-blue-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-600 text-sm font-medium">ລໍຖ້າອະນຸມັດ</p>
+                                    <p class="text-3xl font-bold text-orange-600" id="pending-count">0</p>
+                                    <p class="text-xs text-orange-600 mt-1">
+                                        <i class="fas fa-clock mr-1"></i>ຕ້ອງການດຳເນີນການ
+                                    </p>
+                                </div>
+                                <div class="bg-orange-100 p-4 rounded-2xl">
+                                    <i class="fas fa-hourglass-half text-2xl text-orange-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="lg:col-span-2">
+                            <div class="bg-white rounded-2xl shadow-lg p-6">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-xl font-bold text-gray-800">ເອກະສານຫຼ້າສຸດ</h3>
+                                    <button onclick="showTab('incoming')" class="text-blue-600 hover:text-blue-800 font-medium">
+                                        ເບິ່ງທັງໝົດ <i class="fas fa-arrow-right ml-1"></i>
+                                    </button>
+                                </div>
+                                <div id="recent-documents" class="space-y-4 custom-scrollbar" style="max-height: 400px; overflow-y: auto;">
+                                    <div class="text-center py-12 text-gray-500">
+                                        <i class="fas fa-file-alt text-4xl mb-4 text-gray-300"></i>
+                                        <p>ຍັງບໍ່ມີເອກະສານ</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Quick Add -->
+                            <div class="bg-white rounded-2xl shadow-lg p-6">
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">ການດຳເນີນການດ່ວນ</h3>
+                                <div class="space-y-3">
+                                    <button onclick="showTab('add')" class="w-full flex items-center space-x-3 p-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+                                        <i class="fas fa-plus-circle"></i>
+                                        <span>ເພີ່ມເອກະສານໃໝ່</span>
+                                    </button>
+                                    <button onclick="showTab('send')" class="w-full flex items-center space-x-3 p-3 rounded-xl bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
+                                        <i class="fas fa-share"></i>
+                                        <span>ສົ່ງເອກະສານ</span>
+                                    </button>
+                                    <button onclick="showTab('reports')" class="w-full flex items-center space-x-3 p-3 rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <span>ເບິ່ງລາຍງານ</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Department Status -->
+                            <div class="bg-white rounded-2xl shadow-lg p-6">
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">ສະຖານະພະແນກ</h3>
+                                <div id="department-status" class="space-y-3">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Document Tab -->
+                <div id="add-content" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center mb-8">
+                            <div class="gradient-bg p-3 rounded-xl mr-4">
+                                <i class="fas fa-plus-circle text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">ເພີ່ມເອກະສານໃໝ່</h3>
+                                <p class="text-gray-600">ໃສ່ຂໍ້ມູນເອກະສານທີ່ຕ້ອງການເພີ່ມເຂົ້າລະບົບ</p>
+                            </div>
+                        </div>
+                        
+                        <form id="document-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ປະເພດເອກະສານ *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-file-alt absolute left-4 top-4 text-gray-400"></i>
+                                        <select id="doc-type" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                                            <option value="">ເລືອກປະເພດເອກະສານ</option>
+                                            <option value="incoming">ເອກະສານຂາເຂົ້າ</option>
+                                            <option value="outgoing">ເອກະສານຂາອອກ</option>
+                                            <option value="internal">ເອກະສານພາຍໃນ</option>
+                                            <option value="external">ເອກະສານພາຍນອກ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ເລກທີເອກະສານ *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-hashtag absolute left-4 top-4 text-gray-400"></i>
+                                        <input type="text" id="doc-number" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="ເຊັ່ນ: DOC-2024-001" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">ຫົວຂໍ້ເອກະສານ *</label>
+                                <div class="relative">
+                                    <i class="fas fa-heading absolute left-4 top-4 text-gray-400"></i>
+                                    <input type="text" id="doc-title" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="ໃສ່ຫົວຂໍ້ເອກະສານ" required>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ຜູ້ສົ່ງ/ຜູ້ຮັບ *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-user absolute left-4 top-4 text-gray-400"></i>
+                                        <input type="text" id="doc-sender" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="ຊື່ຜູ້ສົ່ງ ຫຼື ຜູ້ຮັບ" required>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ວັນທີ *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-calendar absolute left-4 top-4 text-gray-400"></i>
+                                        <input type="date" id="doc-date" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ຄວາມສຳຄັນ</label>
+                                    <div class="relative">
+                                        <i class="fas fa-exclamation-triangle absolute left-4 top-4 text-gray-400"></i>
+                                        <select id="doc-priority" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                            <option value="normal">ປົກກະຕິ</option>
+                                            <option value="urgent">ດ່ວນ</option>
+                                            <option value="very-urgent">ດ່ວນທີ່ສຸດ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">ລາຍລະອຽດ</label>
+                                <div class="relative">
+                                    <i class="fas fa-align-left absolute left-4 top-4 text-gray-400"></i>
+                                    <textarea id="doc-description" rows="4" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" placeholder="ໃສ່ລາຍລະອຽດເອກະສານ..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ສະຖານະ</label>
+                                    <div class="relative">
+                                        <i class="fas fa-flag absolute left-4 top-4 text-gray-400"></i>
+                                        <select id="doc-status" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                                            <option value="pending">ລໍຖ້າດຳເນີນການ</option>
+                                            <option value="approved">ອະນຸມັດແລ້ວ</option>
+                                            <option value="rejected">ປະຕິເສດ</option>
+                                            <option value="in-progress">ກຳລັງດຳເນີນການ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ໝວດໝູ່</label>
+                                    <div class="relative">
+                                        <i class="fas fa-tags absolute left-4 top-4 text-gray-400"></i>
+                                        <select id="doc-category" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                            <option value="general">ທົ່ວໄປ</option>
+                                            <option value="financial">ການເງິນ</option>
+                                            <option value="hr">ບຸກຄະລາກອນ</option>
+                                            <option value="legal">ກົດໝາຍ</option>
+                                            <option value="technical">ເທັກນິກ</option>
+                                            <option value="administrative">ບໍລິຫານ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- File Upload -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">ແນບໄຟລ໌</label>
+                                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors bg-gray-50">
+                                    <input type="file" id="doc-file" class="hidden" multiple accept=".pdf,.doc,.docx,.jpg,.png,.xlsx,.pptx">
+                                    <button type="button" onclick="document.getElementById('doc-file').click()" class="text-blue-600 hover:text-blue-800 transition-colors">
+                                        <i class="fas fa-cloud-upload-alt text-4xl mb-4"></i>
+                                        <p class="text-lg font-medium">ກົດເພື່ອເລືອກໄຟລ໌</p>
+                                        <p class="text-sm text-gray-500 mt-2">ຫຼື ລາກໄຟລ໌ມາວາງທີ່ນີ້</p>
+                                    </button>
+                                    <p class="text-xs text-gray-400 mt-4">ສະໜັບສະໜູນ: PDF, DOC, DOCX, JPG, PNG, XLSX, PPTX (ສູງສຸດ 10MB)</p>
+                                </div>
+                                <div id="file-list" class="mt-4 space-y-2"></div>
+                            </div>
+                            
+                            <div class="flex space-x-4 pt-6">
+                                <button type="submit" class="flex-1 gradient-bg text-white px-8 py-4 rounded-xl hover:opacity-90 transition-all duration-300 transform hover:scale-105 font-semibold">
+                                    <i class="fas fa-save mr-2"></i>
+                                    ບັນທຶກເອກະສານ
+                                </button>
+                                <button type="button" onclick="resetForm()" class="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-semibold">
+                                    <i class="fas fa-undo mr-2"></i>
+                                    ລ້າງຟອມ
+                                </button>
+                                <button type="button" onclick="previewDocument()" class="px-8 py-4 border-2 border-blue-500 text-blue-600 rounded-xl hover:bg-blue-50 transition-colors font-semibold">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    ເບິ່ງຕົວຢ່າງ
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Send Document Tab -->
+                <div id="send-content" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center mb-8">
+                            <div class="gradient-bg p-3 rounded-xl mr-4">
+                                <i class="fas fa-share text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">ສົ່ງເອກະສານໄປພະແນກອື່ນ</h3>
+                                <p class="text-gray-600">ເລືອກເອກະສານແລະພະແນກປາຍທາງເພື່ອສົ່ງ</p>
+                            </div>
+                        </div>
+                        
+                        <form id="send-document-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ເລືອກເອກະສານ *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-file-alt absolute left-4 top-4 text-gray-400"></i>
+                                        <select id="send-document-select" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                                            <option value="">ເລືອກເອກະສານທີ່ຈະສົ່ງ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ສົ່ງໄປພະແນກ *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-building absolute left-4 top-4 text-gray-400"></i>
+                                        <select id="send-to-department" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                                            <option value="">ເລືອກພະແນກປາຍທາງ</option>
+                                            <option value="admin">ພະແນກບໍລິຫານ</option>
+                                            <option value="finance">ພະແນກການເງິນ</option>
+                                            <option value="hr">ພະແນກບຸກຄະລາກອນ</option>
+                                            <option value="it">ພະແນກເທັກໂນໂລຊີ</option>
+                                            <option value="legal">ພະແນກກົດໝາຍ</option>
+                                            <option value="planning">ພະແນກວາງແຜນ</option>
+                                            <option value="accounting">ພະແນກບັນຊີ</option>
+                                            <option value="marketing">ພະແນກການຕະຫຼາດ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ຄວາມສຳຄັນ</label>
+                                    <div class="relative">
+                                        <i class="fas fa-exclamation-triangle absolute left-4 top-4 text-gray-400"></i>
+                                        <select id="send-priority" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" required>
+                                            <option value="normal">ປົກກະຕິ</option>
+                                            <option value="urgent">ດ່ວນ</option>
+                                            <option value="very-urgent">ດ່ວນທີ່ສຸດ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">ກຳນົດເວລາຕອບກັບ</label>
+                                    <div class="relative">
+                                        <i class="fas fa-clock absolute left-4 top-4 text-gray-400"></i>
+                                        <input type="datetime-local" id="send-deadline" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">ຂໍ້ຄວາມແນບ</label>
+                                <div class="relative">
+                                    <i class="fas fa-comment absolute left-4 top-4 text-gray-400"></i>
+                                    <textarea id="send-message" rows="4" class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" placeholder="ໃສ່ຂໍ້ຄວາມແນບ (ຖ້າມີ)..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Recipients Preview -->
+                            <div id="recipients-preview" class="hidden bg-blue-50 rounded-xl p-4">
+                                <h4 class="font-semibold text-blue-800 mb-2">ຜູ້ຮັບ:</h4>
+                                <div id="recipients-list" class="space-y-2"></div>
+                            </div>
+                            
+                            <div class="flex space-x-4 pt-6">
+                                <button type="submit" class="flex-1 gradient-bg text-white px-8 py-4 rounded-xl hover:opacity-90 transition-all duration-300 transform hover:scale-105 font-semibold">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    ສົ່ງເອກະສານ
+                                </button>
+                                <button type="button" onclick="resetSendForm()" class="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-semibold">
+                                    <i class="fas fa-undo mr-2"></i>
+                                    ລ້າງຟອມ
+                                </button>
+                                <button type="button" onclick="previewSend()" class="px-8 py-4 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 transition-colors font-semibold">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    ເບິ່ງຕົວຢ່າງ
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Sent Documents History -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8 mt-8">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">ປະຫວັດການສົ່ງເອກະສານ</h3>
+                            <div class="flex space-x-3">
+                                <button onclick="exportSentHistory()" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
+                                    <i class="fas fa-download mr-2"></i>ດາວໂຫຼດ
+                                </button>
+                                <button onclick="filterSentHistory()" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                                    <i class="fas fa-filter mr-2"></i>ກັ່ນຕອງ
+                                </button>
+                            </div>
+                        </div>
+                        <div id="sent-documents-history" class="space-y-4 custom-scrollbar" style="max-height: 500px; overflow-y: auto;">
+                            <div class="text-center py-12 text-gray-500">
+                                <i class="fas fa-paper-plane text-4xl mb-4 text-gray-300"></i>
+                                <p>ຍັງບໍ່ມີປະຫວັດການສົ່ງ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Incoming Documents Tab -->
+                <div id="incoming-content" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <div class="bg-green-100 p-3 rounded-xl mr-4">
+                                    <i class="fas fa-inbox text-2xl text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800">ເອກະສານຂາເຂົ້າ</h3>
+                                    <p class="text-gray-600">ຈັດການເອກະສານທີ່ຮັບເຂົ້າມາ</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                <div class="relative">
+                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                    <input type="text" id="search-incoming" placeholder="ຄົ້ນຫາເອກະສານ..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64">
+                                </div>
+                                <button onclick="filterDocuments('incoming', 'all')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                                    <i class="fas fa-list mr-1"></i>ທັງໝົດ
+                                </button>
+                                <button onclick="filterDocuments('incoming', 'pending')" class="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors">
+                                    <i class="fas fa-clock mr-1"></i>ລໍຖ້າ
+                                </button>
+                                <button onclick="filterDocuments('incoming', 'approved')" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
+                                    <i class="fas fa-check mr-1"></i>ອະນຸມັດ
+                                </button>
+                            </div>
+                        </div>
+                        <div id="incoming-documents" class="space-y-4 custom-scrollbar" style="max-height: 600px; overflow-y: auto;">
+                            <div class="text-center py-12 text-gray-500">
+                                <i class="fas fa-inbox text-4xl mb-4 text-gray-300"></i>
+                                <p>ຍັງບໍ່ມີເອກະສານຂາເຂົ້າ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outgoing Documents Tab -->
+                <div id="outgoing-content" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <div class="bg-blue-100 p-3 rounded-xl mr-4">
+                                    <i class="fas fa-paper-plane text-2xl text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800">ເອກະສານຂາອອກ</h3>
+                                    <p class="text-gray-600">ຈັດການເອກະສານທີ່ສົ່ງອອກ</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                <div class="relative">
+                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                    <input type="text" id="search-outgoing" placeholder="ຄົ້ນຫາເອກະສານ..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64">
+                                </div>
+                                <button onclick="filterDocuments('outgoing', 'all')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                                    <i class="fas fa-list mr-1"></i>ທັງໝົດ
+                                </button>
+                                <button onclick="filterDocuments('outgoing', 'pending')" class="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors">
+                                    <i class="fas fa-clock mr-1"></i>ລໍຖ້າ
+                                </button>
+                                <button onclick="filterDocuments('outgoing', 'sent')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                                    <i class="fas fa-check mr-1"></i>ສົ່ງແລ້ວ
+                                </button>
+                            </div>
+                        </div>
+                        <div id="outgoing-documents" class="space-y-4 custom-scrollbar" style="max-height: 600px; overflow-y: auto;">
+                            <div class="text-center py-12 text-gray-500">
+                                <i class="fas fa-paper-plane text-4xl mb-4 text-gray-300"></i>
+                                <p>ຍັງບໍ່ມີເອກະສານຂາອອກ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Archive Tab -->
+                <div id="archive-content" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center mb-8">
+                            <div class="bg-purple-100 p-3 rounded-xl mr-4">
+                                <i class="fas fa-archive text-2xl text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">ຄັງເອກະສານ</h3>
+                                <p class="text-gray-600">ເອກະສານທີ່ຖືກເກັບໄວ້ແລ້ວ</p>
+                            </div>
+                        </div>
+                        <div id="archived-documents" class="space-y-4">
+                            <div class="text-center py-12 text-gray-500">
+                                <i class="fas fa-archive text-4xl mb-4 text-gray-300"></i>
+                                <p>ຍັງບໍ່ມີເອກະສານໃນຄັງ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="reports-content" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center mb-8">
+                            <div class="bg-indigo-100 p-3 rounded-xl mr-4">
+                                <i class="fas fa-chart-bar text-2xl text-indigo-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">ລາຍງານ</h3>
+                                <p class="text-gray-600">ສະຖິຕິແລະລາຍງານການໃຊ້ງານ</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Report Charts -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4">ສະຖິຕິເອກະສານລາຍເດືອນ</h4>
+                                <div id="monthly-chart" class="h-64 flex items-center justify-center text-gray-500">
+                                    <div class="text-center">
+                                        <i class="fas fa-chart-line text-4xl mb-4"></i>
+                                        <p>ກຳລັງໂຫຼດຂໍ້ມູນ...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4">ການແຈກຢາຍຕາມພະແນກ</h4>
+                                <div id="department-chart" class="h-64 flex items-center justify-center text-gray-500">
+                                    <div class="text-center">
+                                        <i class="fas fa-chart-pie text-4xl mb-4"></i>
+                                        <p>ກຳລັງໂຫຼດຂໍ້ມູນ...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Export Options -->
+                        <div class="mt-8 flex space-x-4">
+                            <button onclick="exportReport('pdf')" class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                                <i class="fas fa-file-pdf mr-2"></i>ສົ່ງອອກ PDF
+                            </button>
+                            <button onclick="exportReport('excel')" class="px-6 py-3 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
+                                <i class="fas fa-file-excel mr-2"></i>ສົ່ງອອກ Excel
+                            </button>
+                            <button onclick="printReport()" class="px-6 py-3 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                                <i class="fas fa-print mr-2"></i>ພິມລາຍງານ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action">
+        <button onclick="showTab('add')" class="gradient-bg text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification bg-green-500 text-white px-6 py-4 rounded-xl shadow-lg">
+        <div class="flex items-center">
+            <i id="notification-icon" class="fas fa-check-circle text-xl mr-3"></i>
+            <div>
+                <p id="notification-title" class="font-semibold">ສຳເລັດ!</p>
+                <p id="notification-message" class="text-sm opacity-90">ດຳເນີນການສຳເລັດແລ້ວ</p>
+            </div>
+            <button onclick="hideNotification()" class="ml-4 text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Document Preview Modal -->
+    <div id="document-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div class="flex items-center justify-between p-6 border-b">
+                <h3 class="text-xl font-bold text-gray-800">ລາຍລະອຽດເອກະສານ</h3>
+                <button onclick="closeDocumentModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="document-modal-content" class="p-6 document-preview custom-scrollbar">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let documents = JSON.parse(localStorage.getItem('documents')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let sentDocuments = JSON.parse(localStorage.getItem('sentDocuments')) || [];
+        let archivedDocuments = JSON.parse(localStorage.getItem('archivedDocuments')) || [];
+
+        // Department names mapping
+        const departmentNames = {
+            'admin': 'ພະແນກບໍລິຫານ',
+            'finance': 'ພະແນກການເງິນ ນະຄອນຫຼວງວຽງຈັນ',
+            'hr': 'ພະແນກອຸດສາຫະກຳ ແລະ ການຄ້າ ນະຄອນຫຼວງວຽງຈັນ',
+            'it': 'ພະແນກເຕັກໂນໂລຊີ ແລະ ການສື່ສານ ນະຄອນຫຼວງວຽງຈັນ',
+            'legal': 'ພະແນກສາທາລະນະສຸກ ນະຄອນຫຼວງວຽງຈັນ',
+            'planning': 'ພະແນກຍຸຕິທຳ ນະຄອນຫຼວງວຽງຈັນ',
+            'accounting': 'ພະແນກແຮງງານສະຫວັດດີການ ແລະ ສັງຄົມ ນະຄອນຫຼວງວຽງຈັນ',
+            'marketing': 'ດ່ານຂົວມິດຕະພາບສາການ ລາວ-ໄທ 1 ນະຄອນຫຼວງວຽງຈັນ'
+        };
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            showLoadingScreen();
+            setTimeout(() => {
+                hideLoadingScreen();
+                checkAuthStatus();
+                setupEventListeners();
+            }, 2000);
+        });
+
+        function showLoadingScreen() {
+            document.getElementById('loading-screen').classList.remove('hidden');
+        }
+
+        function hideLoadingScreen() {
+            document.getElementById('loading-screen').classList.add('hidden');
+        }
+
+        function checkAuthStatus() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainApp();
+            } else {
+                showAuthModal();
+            }
+        }
+
+        function setupEventListeners() {
+            // Auth forms
+            document.getElementById('login-form-element').addEventListener('submit', handleLogin);
+            document.getElementById('register-form-element').addEventListener('submit', handleRegister);
+            
+            // Document forms
+            document.getElementById('document-form').addEventListener('submit', handleAddDocument);
+            document.getElementById('send-document-form').addEventListener('submit', handleSendDocument);
+            
+            // File handling
+            document.getElementById('doc-file').addEventListener('change', handleFileSelect);
+            
+            // Search functionality
+            document.getElementById('search-incoming')?.addEventListener('input', (e) => {
+                searchDocuments('incoming', e.target.value);
+            });
+            
+            document.getElementById('search-outgoing')?.addEventListener('input', (e) => {
+                searchDocuments('outgoing', e.target.value);
+            });
+
+            // Sidebar toggle
+            document.getElementById('sidebar-toggle')?.addEventListener('click', toggleSidebar);
+            
+            // Profile menu
+            document.getElementById('profile-menu-btn')?.addEventListener('click', toggleProfileMenu);
+            
+            // Click outside to close menus
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#profile-menu-btn') && !e.target.closest('#profile-menu')) {
+                    document.getElementById('profile-menu').classList.add('hidden');
+                }
+            });
+        }
+
+        function showAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            if (currentUser) {
+                document.getElementById('current-user').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                document.getElementById('current-department').textContent = departmentNames[currentUser.department];
+                document.getElementById('current-department').className = `px-3 py-1 rounded-full text-white text-xs font-medium department-card ${currentUser.department}`;
+                document.getElementById('current-position').textContent = currentUser.position;
+                
+                updateStatistics();
+                renderRecentDocuments();
+                populateDocumentSelect();
+                renderDepartmentStatus();
+                document.getElementById('doc-date').valueAsDate = new Date();
+            }
+        }
+
+        function showLoginForm() {
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+        }
+
+        function showRegisterForm() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const department = document.getElementById('login-department').value;
+            
+            // Simple authentication (in real app, this would be server-side)
+            const user = users.find(u => 
+                (u.username === username || u.email === username) && 
+                u.password === password && 
+                u.department === department
+            );
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showMainApp();
+                showNotification('ເຂົ້າສູ່ລະບົບສຳເລັດ!', 'ຍິນດີຕ້ອນຮັບເຂົ້າສູ່ລະບົບ', 'success');
+            } else {
+                showNotification('ຂໍ້ມູນບໍ່ຖືກຕ້ອງ!', 'ກະລຸນາກວດສອບຂໍ້ມູນອີກຄັ້ງ', 'error');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const firstName = document.getElementById('register-firstname').value;
+            const lastName = document.getElementById('register-lastname').value;
+            const email = document.getElementById('register-email').value;
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const department = document.getElementById('register-department').value;
+            const position = document.getElementById('register-position').value;
+            const phone = document.getElementById('register-phone').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                showNotification('ລະຫັດຜ່ານບໍ່ຕົງກັນ!', 'ກະລຸນາໃສ່ລະຫັດຜ່ານໃຫ້ຖືກຕ້ອງ', 'error');
+                return;
+            }
+            
+            if (users.find(u => u.username === username || u.email === email)) {
+                showNotification('ຊື່ຜູ້ໃຊ້ ຫຼື ອີເມວນີ້ມີຢູ່ແລ້ວ!', 'ກະລຸນາເລືອກຊື່ຜູ້ໃຊ້ອື່ນ', 'error');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                firstName,
+                lastName,
+                email,
+                username,
+                password, // In real app, this should be hashed
+                department,
+                position,
+                phone,
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            showNotification('ລົງທະບຽນສຳເລັດ!', 'ກະລຸນາເຂົ້າສູ່ລະບົບ', 'success');
+            showLoginForm();
+            
+            // Clear form
+            document.getElementById('register-form-element').reset();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showAuthModal();
+            showNotification('ອອກຈາກລະບົບສຳເລັດ!', 'ຂອບໃຈທີ່ໃຊ້ບໍລິການ', 'success');
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(button => {
+                button.classList.remove('bg-gradient-to-r', 'from-blue-500', 'to-purple-600', 'text-white');
+                button.classList.add('text-gray-600', 'hover:bg-gray-50');
+            });
+            
+            // Show selected tab content
+            const content = document.getElementById(tabName + '-content');
+            content.classList.remove('hidden');
+            content.classList.add('fade-in');
+            
+            // Add active class to selected tab
+            const activeTab = document.getElementById('tab-' + tabName);
+            activeTab.classList.add('bg-gradient-to-r', 'from-blue-500', 'to-purple-600', 'text-white');
+            activeTab.classList.remove('text-gray-600', 'hover:bg-gray-50');
+            
+            // Load content based on tab
+            if (tabName === 'incoming') {
+                renderDocuments('incoming');
+            } else if (tabName === 'outgoing') {
+                renderDocuments('outgoing');
+            } else if (tabName === 'send') {
+                renderSentDocumentsHistory();
+            } else if (tabName === 'archive') {
+                renderArchivedDocuments();
+            } else if (tabName === 'reports') {
+                renderReports();
+            }
+        }
+
+        function handleAddDocument(event) {
+            event.preventDefault();
+            
+            const formData = {
+                id: Date.now().toString(),
+                type: document.getElementById('doc-type').value,
+                number: document.getElementById('doc-number').value,
+                title: document.getElementById('doc-title').value,
+                sender: document.getElementById('doc-sender').value,
+                date: document.getElementById('doc-date').value,
+                description: document.getElementById('doc-description').value,
+                status: document.getElementById('doc-status').value,
+                priority: document.getElementById('doc-priority').value,
+                category: document.getElementById('doc-category').value,
+                files: Array.from(document.getElementById('doc-file').files).map(file => ({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type
+                })),
+                department: currentUser.department,
+                createdBy: currentUser.id,
+                createdAt: new Date().toISOString()
+            };
+            
+            documents.push(formData);
+            localStorage.setItem('documents', JSON.stringify(documents));
+            
+            showNotification('ບັນທຶກເອກະສານສຳເລັດ!', 'ເອກະສານໄດ້ຖືກເພີ່ມເຂົ້າລະບົບແລ້ວ', 'success');
+            resetForm();
+            updateStatistics();
+            renderRecentDocuments();
+            populateDocumentSelect();
+        }
+
+        function handleSendDocument(event) {
+            event.preventDefault();
+            
+            const documentId = document.getElementById('send-document-select').value;
+            const toDepartment = document.getElementById('send-to-department').value;
+            const priority = document.getElementById('send-priority').value;
+            const message = document.getElementById('send-message').value;
+            const deadline = document.getElementById('send-deadline').value;
+            
+            const document = documents.find(d => d.id === documentId);
+            if (!document) {
+                showNotification('ບໍ່ພົບເອກະສານທີ່ເລືອກ!', 'ກະລຸນາເລືອກເອກະສານໃໝ່', 'error');
+                return;
+            }
+            
+            const sentDoc = {
+                id: Date.now().toString(),
+                documentId: documentId,
+                document: document,
+                fromDepartment: currentUser.department,
+                toDepartment: toDepartment,
+                priority: priority,
+                message: message,
+                deadline: deadline,
+                status: 'sent',
+                sentBy: currentUser.id,
+                sentAt: new Date().toISOString()
+            };
+            
+            sentDocuments.push(sentDoc);
+            localStorage.setItem('sentDocuments', JSON.stringify(sentDocuments));
+            
+            // Create incoming document for receiving department
+            const incomingDoc = {
+                ...document,
+                id: Date.now().toString() + '_received',
+                type: 'incoming',
+                status: 'received',
+                fromDepartment: currentUser.department,
+                priority: priority,
+                message: message,
+                deadline: deadline,
+                receivedAt: new Date().toISOString()
+            };
+            
+            documents.push(incomingDoc);
+            localStorage.setItem('documents', JSON.stringify(documents));
+            
+            showNotification('ສົ່ງເອກະສານສຳເລັດ!', 'ເອກະສານໄດ້ຖືກສົ່ງໄປຫາພະແນກປາຍທາງແລ້ວ', 'success');
+            resetSendForm();
+            updateStatistics();
+            renderSentDocumentsHistory();
+        }
+
+        function updateStatistics() {
+            const userDocs = documents.filter(doc => doc.department === currentUser.department);
+            const totalDocs = userDocs.length;
+            const incomingDocs = userDocs.filter(doc => doc.type === 'incoming').length;
+            const outgoingDocs = userDocs.filter(doc => doc.type === 'outgoing').length;
+            const pendingDocs = userDocs.filter(doc => doc.status === 'pending').length;
+            const sentDocs = sentDocuments.filter(doc => doc.sentBy === currentUser.id).length;
+            
+            document.getElementById('total-docs').textContent = totalDocs;
+            document.getElementById('incoming-count').textContent = incomingDocs;
+            document.getElementById('outgoing-count').textContent = outgoingDocs;
+            document.getElementById('pending-count').textContent = pendingDocs;
+            
+            // Update badges
+            updateBadge('incoming-badge', incomingDocs);
+            updateBadge('outgoing-badge', outgoingDocs);
+        }
+
+        function updateBadge(badgeId, count) {
+            const badge = document.getElementById(badgeId);
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function renderRecentDocuments() {
+            const userDocs = documents
+                .filter(doc => doc.department === currentUser.department)
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 5);
+            
+            const container = document.getElementById('recent-documents');
+            
+            if (userDocs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-file-alt text-4xl mb-4 text-gray-300"></i>
+                        <p>ຍັງບໍ່ມີເອກະສານ</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = userDocs.map(doc => `
+                <div class="card-hover border border-gray-200 rounded-xl p-4 cursor-pointer" onclick="showDocumentDetail('${doc.id}')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="status-badge px-3 py-1 text-xs font-medium rounded-full ${doc.type === 'incoming' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">
+                                    ${doc.type === 'incoming' ? 'ຂາເຂົ້າ' : 'ຂາອອກ'}
+                                </span>
+                                <span class="status-badge px-3 py-1 text-xs font-medium rounded-full ${getStatusClass(doc.status)}">
+                                    ${getStatusText(doc.status)}
+                                </span>
+                                ${doc.priority && doc.priority !== 'normal' ? `<span class="status-badge px-2 py-1 text-xs font-medium rounded-full ${getPriorityClass(doc.priority)}">${getPriorityText(doc.priority)}</span>` : ''}
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-1">${doc.title}</h4>
+                            <p class="text-sm text-gray-600">ເລກທີ: ${doc.number} | ${doc.sender}</p>
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-calendar mr-1"></i>${new Date(doc.date).toLocaleDateString('lo-LA')}
+                            </p>
+                        </div>
+                        <div class="text-right space-y-2">
+                            <button onclick="event.stopPropagation(); toggleDocumentStatus('${doc.id}')" class="block px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                                <i class="fas fa-edit mr-1"></i>ປ່ຽນສະຖານະ
+                            </button>
+                            <button onclick="event.stopPropagation(); archiveDocument('${doc.id}')" class="block px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
+                                <i class="fas fa-archive mr-1"></i>ເກັບໄວ້
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderDepartmentStatus() {
+            const container = document.getElementById('department-status');
+            const departments = Object.keys(departmentNames);
+            
+            container.innerHTML = departments.map(dept => {
+                const deptDocs = documents.filter(doc => doc.department === dept).length;
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 rounded-full department-card ${dept}"></div>
+                            <span class="text-sm font-medium text-gray-700">${departmentNames[dept]}</span>
+                        </div>
+                        <span class="text-sm font-bold text-gray-800">${deptDocs}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function populateDocumentSelect() {
+            const select = document.getElementById('send-document-select');
+            const userDocs = documents.filter(doc => 
+                doc.department === currentUser.department && 
+                (doc.type === 'outgoing' || doc.createdBy === currentUser.id)
+            );
+            
+            select.innerHTML = '<option value="">ເລືອກເອກະສານທີ່ຈະສົ່ງ</option>';
+            
+            userDocs.forEach(doc => {
+                const option = document.createElement('option');
+                option.value = doc.id;
+                option.textContent = `${doc.number} - ${doc.title}`;
+                select.appendChild(option);
+            });
+        }
+
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const titleEl = document.getElementById('notification-title');
+            const messageEl = document.getElementById('notification-message');
+            const iconEl = document.getElementById('notification-icon');
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            
+            // Set color and icon based on type
+            if (type === 'error') {
+                notification.className = 'notification bg-red-500 text-white px-6 py-4 rounded-xl shadow-lg';
+                iconEl.className = 'fas fa-exclamation-circle text-xl mr-3';
+            } else if (type === 'warning') {
+                notification.className = 'notification bg-orange-500 text-white px-6 py-4 rounded-xl shadow-lg';
+                iconEl.className = 'fas fa-exclamation-triangle text-xl mr-3';
+            } else {
+                notification.className = 'notification bg-green-500 text-white px-6 py-4 rounded-xl shadow-lg';
+                iconEl.className = 'fas fa-check-circle text-xl mr-3';
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('show');
+        }
+
+        // Helper functions for status and priority
+        function getStatusClass(status) {
+            switch(status) {
+                case 'pending': return 'bg-orange-100 text-orange-800';
+                case 'approved': return 'bg-green-100 text-green-800';
+                case 'rejected': return 'bg-red-100 text-red-800';
+                case 'sent': return 'bg-blue-100 text-blue-800';
+                case 'received': return 'bg-purple-100 text-purple-800';
+                case 'in-progress': return 'bg-yellow-100 text-yellow-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return 'ລໍຖ້າ';
+                case 'approved': return 'ອະນຸມັດ';
+                case 'rejected': return 'ປະຕິເສດ';
+                case 'sent': return 'ສົ່ງແລ້ວ';
+                case 'received': return 'ຮັບແລ້ວ';
+                case 'in-progress': return 'ກຳລັງດຳເນີນການ';
+                default: return 'ບໍ່ຮູ້';
+            }
+        }
+
+        function getPriorityClass(priority) {
+            switch(priority) {
+                case 'urgent': return 'priority-urgent text-white';
+                case 'very-urgent': return 'priority-very-urgent text-white';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function getPriorityText(priority) {
+            switch(priority) {
+                case 'urgent': return 'ດ່ວນ';
+                case 'very-urgent': return 'ດ່ວນທີ່ສຸດ';
+                default: return 'ປົກກະຕິ';
+            }
+        }
+
+        // Additional functions for document management
+        function toggleDocumentStatus(docId) {
+            const docIndex = documents.findIndex(d => d.id === docId);
+            if (docIndex === -1) return;
+            
+            const currentStatus = documents[docIndex].status;
+            let newStatus;
+            
+            switch(currentStatus) {
+                case 'pending':
+                    newStatus = 'approved';
+                    break;
+                case 'approved':
+                    newStatus = 'in-progress';
+                    break;
+                case 'in-progress':
+                    newStatus = 'rejected';
+                    break;
+                case 'rejected':
+                    newStatus = 'pending';
+                    break;
+                case 'received':
+                    newStatus = 'approved';
+                    break;
+                default:
+                    newStatus = 'pending';
+            }
+            
+            documents[docIndex].status = newStatus;
+            documents[docIndex].updatedAt = new Date().toISOString();
+            localStorage.setItem('documents', JSON.stringify(documents));
+            
+            updateStatistics();
+            renderRecentDocuments();
+            
+            // Refresh current view
+            const activeTab = document.querySelector('.nav-item.bg-gradient-to-r');
+            if (activeTab) {
+                const tabName = activeTab.id.replace('tab-', '');
+                if (tabName === 'incoming' || tabName === 'outgoing') {
+                    renderDocuments(tabName);
+                }
+            }
+            
+            showNotification('ປ່ຽນສະຖານະສຳເລັດ!', `ສະຖານະໄດ້ຖືກປ່ຽນເປັນ "${getStatusText(newStatus)}"`, 'success');
+        }
+
+        function archiveDocument(docId) {
+            if (!confirm('ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການເກັບເອກະສານນີ້ໄວ້?')) return;
+            
+            const docIndex = documents.findIndex(d => d.id === docId);
+            if (docIndex === -1) return;
+            
+            const doc = documents[docIndex];
+            doc.archivedAt = new Date().toISOString();
+            doc.archivedBy = currentUser.id;
+            
+            archivedDocuments.push(doc);
+            documents.splice(docIndex, 1);
+            
+            localStorage.setItem('documents', JSON.stringify(documents));
+            localStorage.setItem('archivedDocuments', JSON.stringify(archivedDocuments));
+            
+            updateStatistics();
+            renderRecentDocuments();
+            
+            showNotification('ເກັບເອກະສານສຳເລັດ!', 'ເອກະສານໄດ້ຖືກເກັບໄວ້ໃນຄັງແລ້ວ', 'success');
+        }
+
+        function showDocumentDetail(docId) {
+            const doc = documents.find(d => d.id === docId) || archivedDocuments.find(d => d.id === docId);
+            if (!doc) return;
+            
+            const modal = document.getElementById('document-modal');
+            const content = document.getElementById('document-modal-content');
+            
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ປະເພດເອກະສານ</label>
+                            <p class="text-gray-800">${doc.type === 'incoming' ? 'ເອກະສານຂາເຂົ້າ' : 'ເອກະສານຂາອອກ'}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ເລກທີເອກະສານ</label>
+                            <p class="text-gray-800">${doc.number}</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">ຫົວຂໍ້ເອກະສານ</label>
+                        <p class="text-gray-800 text-lg font-medium">${doc.title}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ຜູ້ສົ່ງ/ຜູ້ຮັບ</label>
+                            <p class="text-gray-800">${doc.sender}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ວັນທີ</label>
+                            <p class="text-gray-800">${new Date(doc.date).toLocaleDateString('lo-LA')}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ສະຖານະ</label>
+                            <span class="px-3 py-1 text-sm font-medium rounded-full ${getStatusClass(doc.status)}">
+                                ${getStatusText(doc.status)}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    ${doc.description ? `
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ລາຍລະອຽດ</label>
+                            <p class="text-gray-800 bg-gray-50 p-4 rounded-lg">${doc.description}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${doc.files && doc.files.length > 0 ? `
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ໄຟລ໌ແນບ</label>
+                            <div class="space-y-2">
+                                ${doc.files.map(file => `
+                                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                                        <i class="fas fa-file text-blue-600"></i>
+                                        <span class="text-gray-800">${file.name}</span>
+                                        <span class="text-xs text-gray-500">(${(file.size / 1024).toFixed(1)} KB)</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="flex space-x-4 pt-4 border-t">
+                        <button onclick="toggleDocumentStatus('${doc.id}')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                            <i class="fas fa-edit mr-2"></i>ປ່ຽນສະຖານະ
+                        </button>
+                        ${!doc.archivedAt ? `
+                            <button onclick="archiveDocument('${doc.id}')" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
+                                <i class="fas fa-archive mr-2"></i>ເກັບໄວ້
+                            </button>
+                        ` : ''}
+                        <button onclick="printDocument('${doc.id}')" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
+                            <i class="fas fa-print mr-2"></i>ພິມ
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeDocumentModal() {
+            document.getElementById('document-modal').classList.add('hidden');
+        }
+
+        // File handling functions
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            const fileList = document.getElementById('file-list');
+            
+            fileList.innerHTML = '';
+            
+            files.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg';
+                fileItem.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-file text-blue-600"></i>
+                        <div>
+                            <span class="text-sm font-medium text-gray-700">${file.name}</span>
+                            <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="removeFile(${index})" class="text-red-500 hover:text-red-700 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(index) {
+            const fileInput = document.getElementById('doc-file');
+            const dt = new DataTransfer();
+            const files = Array.from(fileInput.files);
+            
+            files.forEach((file, i) => {
+                if (i !== index) {
+                    dt.items.add(file);
+                }
+            });
+            
+            fileInput.files = dt.files;
+            handleFileSelect({ target: fileInput });
+        }
+
+        // Form reset functions
+        function resetForm() {
+            document.getElementById('document-form').reset();
+            document.getElementById('file-list').innerHTML = '';
+            document.getElementById('doc-date').valueAsDate = new Date();
+        }
+
+        function resetSendForm() {
+            document.getElementById('send-document-form').reset();
+            document.getElementById('recipients-preview').classList.add('hidden');
+        }
+
+        // Additional utility functions will be implemented as needed
+        function renderDocuments(type) {
+            // Implementation for rendering documents by type
+            console.log(`Rendering ${type} documents`);
+        }
+
+        function renderSentDocumentsHistory() {
+            // Implementation for rendering sent documents history
+            console.log('Rendering sent documents history');
+        }
+
+        function renderArchivedDocuments() {
+            // Implementation for rendering archived documents
+            console.log('Rendering archived documents');
+        }
+
+        function renderReports() {
+            // Implementation for rendering reports
+            console.log('Rendering reports');
+        }
+
+        // Export and print functions
+        function exportReport(format) {
+            showNotification('ກຳລັງສົ່ງອອກ...', `ກຳລັງສ້າງໄຟລ໌ ${format.toUpperCase()}`, 'success');
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        function printDocument(docId) {
+            showNotification('ກຳລັງພິມ...', 'ກຳລັງເຕຍມການພິມເອກະສານ', 'success');
+        }
+
+        // Search and filter functions
+        function searchDocuments(type, query) {
+            // Implementation for searching documents
+            console.log(`Searching ${type} documents for: ${query}`);
+        }
+
+        function filterDocuments(type, status) {
+            // Implementation for filtering documents
+            console.log(`Filtering ${type} documents by status: ${status}`);
+        }
+
+        // Preview functions
+        function previewDocument() {
+            showNotification('ຕົວຢ່າງເອກະສານ', 'ກຳລັງສ້າງຕົວຢ່າງ...', 'success');
+        }
+
+        function previewSend() {
+            showNotification('ຕົວຢ່າງການສົ່ງ', 'ກຳລັງສ້າງຕົວຢ່າງ...', 'success');
+        }
+
+        // Profile and settings functions
+        function showProfile() {
+            showNotification('ໂປຣໄຟລ໌', 'ກຳລັງໂຫຼດຂໍ້ມູນໂປຣໄຟລ໌...', 'success');
+        }
+
+        function showSettings() {
+            showNotification('ການຕັ້ງຄ່າ', 'ກຳລັງໂຫຼດການຕັ້ງຄ່າ...', 'success');
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f6922e33a28963',t:'MTc1NTIzODY2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
